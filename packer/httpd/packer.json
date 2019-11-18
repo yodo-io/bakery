@@ -1,0 +1,36 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "build_region": "ap-southeast-1"
+    },
+    "builders": [
+        {
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "type": "amazon-ebs",
+            "region": "{{user `build_region`}}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["099720109477"],
+                "most_recent": true
+            },
+            "instance_type": "t2.micro",
+            "ssh_username": "ubuntu",
+            "ami_name": "yodo/httpd-xenial-16.04-amd64-{{timestamp}}",
+            "ami_regions": [
+                "ap-southeast-1"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "./provision.sh"
+        }
+    ]
+}
